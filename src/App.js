@@ -66,7 +66,7 @@ function App() {
       )}
       <div className="grid grid-cols-3 gap-6 place-content-center">
         {board.map((element, index) => {
-          return <Box key={index} value={board[index]} onPress={() => handleClick(index)} />
+          return <Box key={index} value={board[index]} winner={winner} onPress={() => handleClick(index)} />
         })}
       </div>
       <button className="rounded-md bg-blue-500 hover:bg-blue-400 transition-all p-5 mt-6 text-white font-bold" onClick={resetBoard}>Reset Board</button>
