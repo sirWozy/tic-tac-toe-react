@@ -1,10 +1,17 @@
 import Box from "./components/Box";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import Popup from 'reactjs-popup';
+import Button from "./components/Button";
 
 function App() {
   const [board, setBoard] = useState(Array(9).fill(""))
   const [winner, setWinner] = useState(null)
+  const [openModal, setOpenModal] = useState(false)
   const player = "X"
+
+  useEffect(() => {
+    winner && setOpenModal(true)
+  },[winner])
 
   const checkWinner = (board) => {
     const winnerBoard = [
@@ -53,25 +60,30 @@ function App() {
   const resetBoard = () => {
     setBoard(Array(9).fill(""))
     setWinner(null)
+    setOpenModal(false)
   }
   return (
     <div className="flex flex-col items-center justify-center h-screen">
-      {winner && (
-        <div className="p-6 mt-6 mb-8 rounded-md text-white bg-green-400 text-3xl">{`Winner is ${board[winner[0]]}`}</div>
-      )}
-      {!winner && (
         <div className="font-bold text-5xl mb-8 text-blue-500">
           {`You are ${player}`}
         </div>
-      )}
       <div className="grid grid-cols-3 gap-6 place-content-center">
         {board.map((element, index) => {
           return <Box key={index} value={board[index]} winner={winner} onPress={() => handleClick(index)} />
         })}
       </div>
-      <button className="rounded-md bg-blue-500 hover:bg-blue-400 transition-all p-5 mt-6 text-white font-bold" onClick={resetBoard}>Reset Board</button>
+      <Button onPress={() => resetBoard()} />
+      <Popup open={openModal} position="right center">
+        <div className="flex flex-col items-center justify-center bg-green-200 w-80 gap-4 h-80 rounded-md">
+          <span className="text-2xl font-bold">Good job!</span>
+          {winner &&
+            <span className="text-5xl font-bold">{board[winner[0]]}</span>
+          }
+          <span className="text-2xl font-bold">You win this game!</span>
+          <Button onPress={() => resetBoard()} />
+        </div>
+      </Popup>
     </div>
-
   );
 }
 
